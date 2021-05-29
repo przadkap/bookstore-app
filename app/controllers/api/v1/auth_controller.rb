@@ -5,7 +5,6 @@ module Api
 
       def create
         user = User.find_by(login: params[:login])
-        # console.log(params)
         if user.password == params[:password]
           render json: UserSerializer.new(user).serialized_json
         else
@@ -13,11 +12,11 @@ module Api
         end
       end
 
-        private
+      private
 
-        def user_params
-          params.require(:user).permit(:login, :password)
-        end
+      def user_params
+        params.require(:user).permit(:login, :password)
+      end
     end
   end
 end

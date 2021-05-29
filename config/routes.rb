@@ -5,9 +5,21 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      # resources :books do
+      #   member do
+      #     get 'preview'
+      #     get 'hello'
+      #   end
+      # end
       resources :books
       resources :users
       resources :auth
+      resources :op do
+        member do
+          post 'lend_book'
+          post 'return_book'
+        end
+      end
     end
   end
 

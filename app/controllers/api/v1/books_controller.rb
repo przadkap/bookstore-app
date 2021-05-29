@@ -46,6 +46,17 @@ module Api
         end
       end
 
+      # def preview
+      #   book = Book.find_by(id: params[:id])
+      #   render json: BookSerializer.new(book).serialized_json
+      # end
+      #
+      # def hello
+      #   books = Book.all
+      #   render json: BookSerializer.new(books).serialized_json
+      # end
+
+
       private
 
       def book_params
