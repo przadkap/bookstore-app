@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, Fragment} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -7,30 +7,24 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import axios from 'axios';
+import { sizing } from '@material-ui/system';
 
 const useStyles = makeStyles({
   table: {
-    minWidth: 650
+    width: "90%",
+    marginRight: "5%",
+    marginLeft: "5%",
   },
 });
 
-function createData(name, author, release_year, book_amount, available_book_count) {
-  return { name, author, release_year, book_amount, available_book_count };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 class Home extends React.Component {
   render() {
     return(
       <div>
-        Home component
+        <h1 align="center" >Welcome to BOOKSTORE </h1>
+        <h2>Our offer </h2>
         <List></List>
       </div>
     )
@@ -39,8 +33,19 @@ class Home extends React.Component {
 
 function List(){
   const classes = useStyles();
+  const [books, setBooks] = useState([])
+
+    useEffect(()=>{
+      axios.get('/api/v1/books.json')
+      .then( resp => {
+        setBooks(resp.data.data)
+      })
+      .catch(resp => console.log(resp))
+    }, [books.length])
+
   return(
-  <TableContainer component={Paper}>
+
+  <TableContainer className={classes.table}>
     <Table className={classes.table} aria-label="simple table">
       <TableHead>
         <TableRow>
@@ -52,15 +57,15 @@ function List(){
         </TableRow>
       </TableHead>
       <TableBody>
-        {rows.map((row) => (
-          <TableRow key={row.name}>
+        {books.map((item) => (
+          <TableRow key={item.attributes.title}>
             <TableCell component="th" scope="row">
-              {row.name}
+              {item.attributes.title}
             </TableCell>
-            <TableCell align="right">{row.author}</TableCell>
-            <TableCell align="right">{row.release_year}</TableCell>
-            <TableCell align="right">{row.book_amount}</TableCell>
-            <TableCell align="right">{row.available_book_count}</TableCell>
+            <TableCell align="right">{item.attributes.author}</TableCell>
+            <TableCell align="right">{item.attributes.release_year}</TableCell>
+            <TableCell align="right">{item.attributes.max_copies}</TableCell>
+            <TableCell align="right">{item.attributes.available_copies}</TableCell>
           </TableRow>
         ))}
       </TableBody>
