@@ -5,17 +5,17 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      # resources :books do
-      #   member do
-      #     get 'preview'
-      #     get 'hello'
-      #   end
-      # end
       resources :books
       resources :users
-      resources :auth
+      resources :auth do
+        collection do
+          get 'status'
+          post 'log_in'
+          post 'log_out'
+        end
+      end
       resources :op do
-        member do
+        collection do
           post 'lend_book'
           post 'return_book'
         end
