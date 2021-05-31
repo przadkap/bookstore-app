@@ -4,9 +4,10 @@ module Api
       protect_from_forgery with: :null_session
       @@logged_in = false
       @@current_login = ""
+      @@current_id = 0
 
       def status
-        render json: {"logged_in": @@logged_in, "login": @@current_login}
+        render json: {"logged_in": @@logged_in, "login": @@current_login, "id": @@current_id}
       end
 
       def log_in
@@ -15,8 +16,9 @@ module Api
         if user.password == params[:password]
           @@logged_in = true
           @@current_login = user.login
+          @@current_id = user.id
           # render json: UserSerializer.new(user).serialized_json
-          render json: {"logged_in": @@logged_in, "login": @@current_login}
+          render json: {"logged_in": @@logged_in, "login": @@current_login, "id": @@current_id}
         else
           head :no_content
         end
@@ -26,6 +28,7 @@ module Api
         if @@logged_in
           @@logged_in = false
           @@current_login = ""
+          @@current_id = 0
         end
 
         head :no_content
