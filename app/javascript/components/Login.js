@@ -1,9 +1,28 @@
 import React, { useState, useEffect, Fragment} from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import {Link} from 'react-router-dom'
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
+
+//const useStyles = makeStyles({
+const styles = theme => ({
+  table: {
+    width: "90%",
+    marginRight: "5%",
+    marginLeft: "5%",
+  },
+  input: {
+      width: '25ch',
+      margin: 10,
+
+  },
+});
+
 
 class Login extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -12,6 +31,7 @@ class Login extends React.Component {
       errors: ''
      };
   }
+
 handleChange = (event) => {
     const {name, value} = event.target
     this.setState({
@@ -22,76 +42,67 @@ handleChange = (event) => {
   handleSubmit = (event) => {
       event.preventDefault()
       const {login, password} = this.state
-      console.log( "login", login);
-      /*let user = {
-        login: login,
-        password: password
-      }*/
 
-  axios.post('/api/v1/auth', {
-    login: String(login),
-    password: String(password)
-  }, {withCredentials: true})
-      .then(response => {
-      //  console.log( "resp from login", response);
-      console.log('i work', response)
-      this.redirect()
-            /*if (response.data.data.logged_in) {
-              console.log('i work too')
-              this.props.handleLogin(response.data)
-              this.redirect()
-            } else {
-              this.setState({
-                errors: response.data.errors
-              })*/
-            //}
+      axios.post('/api/v1/auth/log_in', {
+        login: String(login),
+        password: String(password)
+      }, {withCredentials: true})
+          .then(response => {
+            console.log('login response', response)
+            this.props.handleLogin(response.data)
+          this.redirect()
           })
           .catch(error => console.log('api errors:', error))
         };
 
-redirect = () => {
-      //this.props.history.push('/')
-      this.props.history.replace( '/' )
-    }
+  redirect = () => {
+        this.props.history.replace( '/' )
+  }
 
-  handleErrors = () => {
-      return (
-        <div>
-          <ul>
-          {this.state.errors.map(error => {
-          return <li key={error}>{error}</li>
-            })}
-          </ul>
-        </div>
-      )
-    };
+    handleErrors = () => {
+    return (
+      <div>
+        <ul>
+        {this.state.errors.map(error => {
+        return <li key={error}>{error}</li>
+          })}
+        </ul>
+      </div>
+    )
+  };
 
 render() {
     const {login,  password} = this.state
+    const { classes } = this.props;
+
     return (
       <div>
         <h1>Log In</h1>
-<form onSubmit={this.handleSubmit}>
-          <input
-            placeholder="login"
-            type="text"
-            name="login"
-            value={login}
+
+<form  onSubmit={this.handleSubmit}>
+          <div>
+          <TextField className={classes.input} id="Login" label="Login"
+            variant="outlined" placeholder="your login"
+            type="text" name="login" value={login}
             onChange={this.handleChange}
           />
-          <input
-            placeholder="password"
-            type="password"
-            name="password"
-            value={password}
+          </div>
+          <div>
+          <TextField className={classes.input} id="Password" label="Password" variant="outlined"
+            placeholder="your password" type="password"
+            name="password" value={password}
             onChange={this.handleChange}
           />
-<button placeholder="submit" type="submit">
-            Log In
-          </button>
+          </div>
+          <div>
+          <Button variant="contained" color="secondary" placeholder="submit" type="submit">
+            Log in
+          </Button>
+          </div>
          </form>
       </div>
     );
   }
 }
-export default Login;
+
+export default withStyles(styles)(Login);
