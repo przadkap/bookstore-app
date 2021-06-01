@@ -7,6 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import axios from 'axios';
 import { sizing } from '@material-ui/system';
 
@@ -16,6 +17,10 @@ const useStyles = makeStyles({
     marginRight: "5%",
     marginLeft: "5%",
   },
+  title: {
+     padding: 10,
+  }
+
 });
 
 
@@ -23,8 +28,12 @@ class Home extends React.Component {
   render() {
     return(
       <div>
-        <h1 align="center" >Welcome to BOOKSTORE </h1>
-        <h2>Our offer </h2>
+      <Typography variant="h4" align="center" gutterBottom>
+        Welcome to BOOKSTORE
+      </Typography>
+      <Typography variant="h6" gutterBottom>
+        Our offer
+      </Typography>
         <List></List>
       </div>
     )
@@ -44,8 +53,7 @@ function List(){
     }, [books.length])
 
   return(
-
-  <TableContainer className={classes.table}>
+      <TableContainer className={classes.table}>
     <Table className={classes.table} aria-label="simple table">
       <TableHead>
         <TableRow>
