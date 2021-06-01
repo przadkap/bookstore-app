@@ -46,7 +46,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       isLoggedIn: false,
-      user: {}
+      user: {},
+      id: {},
      };
   };
 
@@ -57,26 +58,36 @@ class App extends React.Component {
   handleLogin = (data) => {
     this.setState({
       isLoggedIn: true,
-      user: data.user
+      user: data.login,
+      id: data.id
     })
-  }
+  };
 handleLogout = () => {
     this.setState({
     isLoggedIn: false,
     user: {}
     })
-  }
+  };
+
+  handleClick = () => {
+    axios.post('/api/v1/auth/log_out', {withCredentials: true})
+    .then(response => {
+      this.handleLogout()
+      this.props.history.replace( '/' )
+    })
+    .catch(error => console.log(error))
+  };
 
   loginStatus = () => {
-    axios.get('/api/v1/auth',
+    axios.get('/api/v1/auth/status',
    {withCredentials: true})
 .then(response => {
     console.log("now it s logged", response);
       if (response.data.logged_in) {
-        //console.log("now it s logged", response);
-        this.handleLogin(response)
+        //console.log("now it s logged", response.data.id);
+        this.handleLogin(response.data)
       } else {
-        console.log("now it s logged", response.data.logged_in);
+        //console.log("now it s logged", response.data.logged_in);
         this.handleLogout()
       }
       //console.log( "resp from login", response);
@@ -85,7 +96,7 @@ handleLogout = () => {
   };
 
   render() {
-    console.log("is logged", this.state.isLoggedIn);
+    console.log(" who is logged", this.state.id);
     const { classes } = this.props;
     return(
       <div>
@@ -99,10 +110,10 @@ handleLogout = () => {
               <div>
               {
                 this.state.isLoggedIn ? (<div>
-                  <Button variant="contained" color="inherit" component={Link} to={'/user-page'} >Your account</Button>
-                  <Button variant="contained" color="inherit">Logout</Button>
+                  <Button variant="contained" color="secondary" component={Link} to={'/user-page'} >Your account</Button>
+                  <Button variant="contained" color="primary" onClick={this.handleClick}>Logout</Button>
                 </div>) :
-                        (<Button vvariant="contained" color="inherit" component={Link} to={'/Login'}>Login</Button> )
+                        (<Button variant="contained" color="primary" component={Link} to={'/Login'}>Login</Button> )
                 }
               </div>
             </Toolbar>
@@ -110,12 +121,12 @@ handleLogout = () => {
         </div>
         <Switch>
           <Route exact path='/' render={props => (
-              <Home {...props} handleLogout={this.handleLogout} loggedInStatus={this.state.isLoggedIn}/>
+              <Home {...props} handleLogout={this.handleLogout} loggedInStatus={this.state.isLoggedIn} loggedId={this.state.id}/>
               )}
           />
           <Route exact path='/login'
               render={props => (
-              <Login {...props} handleLogin={this.handleLogin} loggedInStatus={this.state.isLoggedIn} />
+              <Login {...props} handleLogin={this.handleLogin} loggedInStatus={this.state.isLoggedIn}  />
               )}
           />
           <Route exact path='/user-page' render={props => (

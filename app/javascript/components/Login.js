@@ -43,7 +43,7 @@ handleChange = (event) => {
       event.preventDefault()
       const {login, password} = this.state
 
-      axios.post('/api/v1/auth', {
+      axios.post('/api/v1/auth/log_in', {
         login: String(login),
         password: String(password)
       }, {withCredentials: true})
@@ -55,20 +55,21 @@ handleChange = (event) => {
           .catch(error => console.log('api errors:', error))
         };
 
-      redirect = () => {
-            this.props.history.replace( '/' )
-      }
-      handleErrors = () => {
-      return (
-        <div>
-          <ul>
-          {this.state.errors.map(error => {
-          return <li key={error}>{error}</li>
-            })}
-          </ul>
-        </div>
-      )
-    };
+  redirect = () => {
+        this.props.history.replace( '/' )
+  }
+
+    handleErrors = () => {
+    return (
+      <div>
+        <ul>
+        {this.state.errors.map(error => {
+        return <li key={error}>{error}</li>
+          })}
+        </ul>
+      </div>
+    )
+  };
 
 render() {
     const {login,  password} = this.state
