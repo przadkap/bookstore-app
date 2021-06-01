@@ -32,29 +32,43 @@ class UserPage extends React.Component {
     super(props);
     this.state = {
       book_id: [],
-      user_id: {},
+      user_id: this.props.loggedId,
       books: [],
      };
   };
 
   componentDidMount() {
-  this.getBooksID()
+  this.loginStatus()
 }
 
-loadBooks = (bookId, userId) => {
+loadBooks = (bookId) => {
   this.setState({
     book_id: bookId,
-    user_id: userId,
   })
   this.getBooks()
 
 };
-    getBooksID= ()=>{
-      axios.get('/api/v1/users/2')
+
+loginStatus = () => {
+  axios.get('/api/v1/auth/status',
+ {withCredentials: true})
+.then(response => {
+      if (response.data.logged_in) {
+      this.setState({
+        user_id: response.data.id,
+      });
+      //console.log("assign user id", response.data.id)
+      this.getBooksID(response.data.id);
+    }
+  })
+  .catch(error => console.log('api errors:', error))
+};
+
+    getBooksID= (user_id)=>{
+      axios.get('/api/v1/users/'+ user_id)
       .then( resp => {
-        //console.log("user info", resp)
-        //console.log("user info", resp.data.data.id)
-        this.loadBooks(resp.data.data.relationships.books.data, resp.data.data.id )
+        console.log("book id", resp.data.data.relationships.books.data)
+        this.loadBooks(resp.data.data.relationships.books.data)
       })
       .catch(resp => console.log(resp))
     };
@@ -80,7 +94,7 @@ loadBooks = (bookId, userId) => {
     })
     .then( resp => {
       console.log("returned book", resp.data)
-      this.getBooksID();
+      this.loginStatus();
     })
     .catch(resp => console.log(resp))
   };

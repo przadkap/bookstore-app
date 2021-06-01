@@ -84,13 +84,10 @@ handleLogout = () => {
 .then(response => {
     console.log("now it s logged", response);
       if (response.data.logged_in) {
-        //console.log("now it s logged", response.data.id);
         this.handleLogin(response.data)
       } else {
-        //console.log("now it s logged", response.data.logged_in);
         this.handleLogout()
       }
-      //console.log( "resp from login", response);
     })
     .catch(error => console.log('api errors:', error))
   };
@@ -130,7 +127,7 @@ handleLogout = () => {
               )}
           />
           <Route exact path='/user-page' render={props => (
-              <UserPage {...props} handleLogout={this.handleLogout} loggedInStatus={this.state.isLoggedIn}/>
+              <UserPage {...props} handleLogout={this.handleLogout} loggedInStatus={this.state.isLoggedIn} loggedId={this.state.id}/>
               )}
           />
         </Switch>

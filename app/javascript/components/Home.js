@@ -61,11 +61,12 @@ getBooks=()=>{
         book_id: id,
       })
       .then( resp => {
-        console.log("book id", id)
-        console.log("logged user id", this.props.loggedId)
+        //console.log("book id", id)
+        //console.log("logged user id", this.props.loggedId)
         this.setState({
           books: resp.data.data,
         })
+        this.getBooks();
       })
       .catch(resp => console.log(resp))
     };
